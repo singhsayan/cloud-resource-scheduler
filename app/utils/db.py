@@ -1,4 +1,3 @@
-# Optional: simple SQLite helpers if you want persistence later.
 import sqlite3
 from pathlib import Path
 
