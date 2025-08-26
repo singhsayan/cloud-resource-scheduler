@@ -2,21 +2,16 @@ import random
 import pandas as pd
 from datetime import datetime, timedelta, timezone
 
-# -----------------------------
-# Config
-# -----------------------------
+
 DEMO_MODE = True  # ✅ Toggle this: True = mock data, False = real Azure data
 
-# -----------------------------
-# 1. Cost Summary
-# -----------------------------
+
 def get_cost_summary() -> float:
     if DEMO_MODE:
         today = datetime.now(timezone.utc).date()
-        random.seed(today.toordinal())  # stable mock per day
+        random.seed(today.toordinal())  
         return round(random.uniform(200, 1200), 2)
 
-    # Real Azure Cost API (requires subscription + billing setup)
     from azure.identity import DefaultAzureCredential
     from azure.mgmt.consumption import ConsumptionManagementClient
     from azure.mgmt.resource import SubscriptionClient
@@ -38,9 +33,6 @@ def get_cost_summary() -> float:
     total = sum(float(item.pretax_cost) for item in usage)
     return round(total, 2)
 
-# -----------------------------
-# 2. Cost Breakdown
-# -----------------------------
 def get_cost_breakdown() -> pd.DataFrame:
     if DEMO_MODE:
         end = datetime.now(timezone.utc).replace(day=1)
@@ -55,7 +47,7 @@ def get_cost_breakdown() -> pd.DataFrame:
             "Application Gateway",
             "Monitor"
         ]
-        regions = ["eastus"]  # keep single common region for mock clarity
+        regions = ["eastus"]  
 
         rows = []
         for m in months:
@@ -65,12 +57,8 @@ def get_cost_breakdown() -> pd.DataFrame:
 
         return pd.DataFrame(rows, columns=["month", "service", "region", "cost"])
 
-    # Real implementation would query Azure Cost Management API
     raise NotImplementedError("Azure cost breakdown requires billing API setup.")
 
-# -----------------------------
-# 3. Idle / Underutilized Resources
-# -----------------------------
 def list_idle_resources():
     if DEMO_MODE:
         return [
@@ -93,7 +81,6 @@ def list_idle_resources():
 
     idle_resources = []
     for vm in vms:
-        # Placeholder: real idle check would need Azure Monitor metrics
         idle_resources.append(vm.name)
 
     return idle_resources
