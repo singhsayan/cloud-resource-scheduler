@@ -10,7 +10,7 @@ with st.form("sched_form"):
     provider = st.selectbox("Cloud", ["AWS", "Azure"])
     action = st.selectbox("Action", ["stop", "start"])
     timezone = st.text_input("Timezone", value="UTC")
-    cron = st.text_input("Cron Expression", value="0 20 * * 1-5")  # 20:00 Mon-Fri
+    cron = st.text_input("Cron Expression", value="0 20 * * 1-5")  
     enabled = st.checkbox("Enabled", value=True)
 
     submitted = st.form_submit_button("Save Rule")
