@@ -15,6 +15,5 @@ def generate_recommendations(cost_data: dict[str, float]) -> list[str]:
     if aws < 200 and az < 200:
         recs.append(" Costs look healthy. Keep monitoring utilization & rightsizing.")
 
-    # Generic
     recs.append("Cross-cloud: Right-size VMs, delete unattached disks/volumes, and set lifecycle policies for storage.")
     return recs
