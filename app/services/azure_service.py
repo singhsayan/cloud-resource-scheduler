@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta, timezone
 
 
-DEMO_MODE = True  # ✅ Toggle this: True = mock data, False = real Azure data
+DEMO_MODE = True  # True for Mock data, False for real data
 
 
 def get_cost_summary() -> float:
