@@ -32,7 +32,9 @@ The application also analyzes cloud usage, detects idle or underutilized resourc
 - Create a Rule – Define schedule, action (start/stop), and target resource.
 - Toggle Rule – Enable/disable rules anytime.
 - Trigger Now – Execute instantly when needed.
-- Monitor – View cost graphs, idle resources, and recommendations.  
+- Monitor – View cost graphs, idle resources, and recommendations.
+- 
+---
 
 ### Mock vs Real Data
 - This project supports both mock data and real resource data:
@@ -42,6 +44,8 @@ The application also analyzes cloud usage, detects idle or underutilized resourc
 
 - This allows anyone to run the project locally without needing active cloud resources, while still being able to switch to real data when available.
 - The screenshots below demonstrate real AWS data as proof, while mock mode ensures a consistent demo experience.
+
+---
 
 ### Screenshots 
 ### 1. Resouces on AWS
@@ -75,6 +79,8 @@ The application also analyzes cloud usage, detects idle or underutilized resourc
 <p align="center">
   <img src="screenshots/cost-graph2-aws.png" alt="Print Graph" width="600"/>
 </p>
+
+---
 
 ## Getting Started
 
