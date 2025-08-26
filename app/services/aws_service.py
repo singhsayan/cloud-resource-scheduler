@@ -4,18 +4,13 @@ import random
 from datetime import datetime, timedelta, timezone
 from config import settings
 
-# -----------------------------
-# Config
-# -----------------------------
-DEMO_MODE = True  # ✅ Toggle this: True = mock data, False = real AWS data
+DEMO_MODE = True  # True for Mock Data, False for real data
 
-# -----------------------------
-# 1. Get summary (single number)
-# -----------------------------
+
 def get_cost_summary():
     if DEMO_MODE:
         today = datetime.now(timezone.utc).date()
-        random.seed(today.toordinal())  # stable per day
+        random.seed(today.toordinal()) 
         return round(random.uniform(50, 500), 2)
 
     ce = boto3.client("ce", region_name=settings.AWS_REGION)
@@ -34,9 +29,6 @@ def get_cost_summary():
 
     return float(response["ResultsByTime"][0]["Total"]["UnblendedCost"]["Amount"])
 
-# -----------------------------
-# 2. Cost breakdown (per service + daily)
-# -----------------------------
 def get_cost_breakdown():
     if DEMO_MODE:
         end = datetime.now(timezone.utc).replace(day=1)
@@ -54,7 +46,7 @@ def get_cost_breakdown():
     ce = boto3.client("ce", region_name=settings.AWS_REGION)
 
     end = datetime.today().date()
-    start = end - timedelta(days=30)   # last 30 days
+    start = end - timedelta(days=30)   
 
     response = ce.get_cost_and_usage(
         TimePeriod={
@@ -77,9 +69,6 @@ def get_cost_breakdown():
 
     return pd.DataFrame(rows, columns=["service", "cost", "date", "month"])
 
-# -----------------------------
-# 3. Idle resources
-# -----------------------------
 def list_idle_resources():
     if DEMO_MODE:
         return [
@@ -96,8 +85,7 @@ def list_idle_resources():
     cloudwatch = boto3.client("cloudwatch", region_name=settings.AWS_REGION)
     s3 = boto3.client("s3", region_name=settings.AWS_REGION)
     lam = boto3.client("lambda", region_name=settings.AWS_REGION)
-
-    # --- EC2 instances idle check ---
+    
     instances = ec2.describe_instances()
     for reservation in instances["Reservations"]:
         for instance in reservation["Instances"]:
@@ -116,23 +104,20 @@ def list_idle_resources():
             datapoints = metrics.get("Datapoints", [])
             if datapoints:
                 avg_cpu = sum(dp["Average"] for dp in datapoints) / len(datapoints)
-                if avg_cpu < 2:  # idle threshold
+                if avg_cpu < 2:  
                     idle_resources.append(
                         f"EC2 instance {instance_id} (CPU < {round(avg_cpu,2)}% last 7d)"
                     )
 
-    # --- Unattached EBS volumes ---
     volumes = ec2.describe_volumes(Filters=[{"Name": "status", "Values": ["available"]}])
     for vol in volumes["Volumes"]:
         idle_resources.append(f"EBS volume {vol['VolumeId']} (unattached)")
 
-    # --- Unused Elastic IPs ---
     addresses = ec2.describe_addresses()
     for addr in addresses["Addresses"]:
         if "InstanceId" not in addr:
             idle_resources.append(f"Elastic IP {addr['AllocationId']} (unused)")
 
-    # --- S3 buckets with no requests ---
     buckets = s3.list_buckets()
     for bucket in buckets["Buckets"]:
         name = bucket["Name"]
@@ -149,7 +134,6 @@ def list_idle_resources():
         if not datapoints:
             idle_resources.append(f"S3 bucket {name} (no objects/requests last 30d)")
 
-    # --- Lambda functions with zero invocations ---
     functions = lam.list_functions()
     for fn in functions.get("Functions", []):
         fn_name = fn["FunctionName"]
