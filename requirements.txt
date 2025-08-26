@@ -1,0 +1,7 @@
+streamlit
+boto3
+azure-identity
+google-cloud-sdk
+psycopg2-binary
+pandas
+matplotlib
