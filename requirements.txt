@@ -1,7 +1,8 @@
 streamlit
 boto3
 azure-identity
-google-cloud-sdk
-psycopg2-binary
+azure-mgmt-resource
+google-cloud
 pandas
 matplotlib
+psycopg2-binary
